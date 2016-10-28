@@ -65,6 +65,14 @@ bool machine::checkEnoughResource(task *Task){
 	return true;
 }
 
+bool machine::checkFutureEnoughResource(task *Task){
+	if (Task->get_needResource().CPU > this->get_fullResource().CPU)
+		return false;
+	if (Task->get_needResource().RAM > this->get_fullResource().RAM)
+		return false;
+
+	return true;
+}
 void machine::insertTask(task *Task){
 	this->allTasks->push_back(Task);
 }
@@ -77,7 +85,12 @@ int machine::getTimeProcess(){
 	}
 
 	int currentTime = 0;
-	while(waitingTasks->size() > 0){
+	bool lackResource = false;
+	while(waitingTasks->size() > 0) {
+		if(checkFutureEnoughResource(waitingTasks->at(0)) == false){
+			lackResource = true;
+			break;
+		}
 		while(waitingTasks->size() > 0 && checkEnoughResource(waitingTasks->at(0))){
 
 			/* Transmit task from wait queue to process queue*/
@@ -91,24 +104,27 @@ int machine::getTimeProcess(){
 			/* Delete this task from wait queue*/
 			waitingTasks->erase(waitingTasks->begin());
 		}
+		
+		if (processingTasks->size() > 0){
+			/* sort tasks ini processingTasks in ascending order of end time*/
+			sort(processingTasks->begin(),processingTasks->end(), []( task *x, task *y){ return (x->get_etime() < y->get_etime());});
 
-		/* sort tasks ini processingTasks in ascending order of end time*/
-		sort(processingTasks->begin(),processingTasks->end(), []( task *x, task *y){ return (x->get_etime() < y->get_etime());});
+			/* Current time is when the first task in processingtasks queue has just been finished*/
+			currentTime = processingTasks->at(0)->get_etime();
 
-		/* Current time is when the first task in processingtasks queue has just been finished*/
-		currentTime = processingTasks->at(0)->get_etime();
+			/*Free resource for machine when this task has been finished*/
+			freeResource(processingTasks->at(0));
 
-		/*Free resource for machine when this task has been finished*/
-		freeResource(processingTasks->at(0));
+			/* Remove the finished task into processingTasks queue*/
+			processingTasks->erase(processingTasks->begin());
+		}
 
-		/* Remove the finished task into processingTasks queue*/
-		processingTasks->erase(processingTasks->begin());
-
+	
 	}
 
 	/* Get the time that machine finish all tasks*/
 	int time = (processingTasks->size() == 0) ? currentTime : processingTasks->at(processingTasks->size() - 1)->get_etime();
-
+	time = (lackResource == true) ? 999999 : time ;
 	/* Free process and wait queue*/
 	processingTasks->clear();
 	waitingTasks->clear();

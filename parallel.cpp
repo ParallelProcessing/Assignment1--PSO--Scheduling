@@ -9,7 +9,7 @@
 #include <string>
 #include <sys/time.h>
 
-#define STEP 100
+#define STEP 1000
 using namespace std;
 
 time_t time_ms(void) {

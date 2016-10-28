@@ -46,6 +46,7 @@ public:
 	int getID();
 	resource get_fullResource();
 	bool checkEnoughResource(task *Task);
+	bool checkFutureEnoughResource(task *Task);
 	void insertTask(task *Task);
 	int getTimeProcess();
 	void freeResource(task *Task);
