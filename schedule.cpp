@@ -151,7 +151,7 @@ void machine::refreshMachine(){
  *Rememner to add srand into parallel algorithm
  * */
 
-schedule::schedule(vector<machine *> * machines, vector<task *> * tasks){
+schedule::schedule(vector<machine *> * machines, vector<task *> * tasks, bool bestSeed){
 	this->machines = new vector<machine *>();
 	this->tasks = new vector<task *>();
 
@@ -164,8 +164,9 @@ schedule::schedule(vector<machine *> * machines, vector<task *> * tasks){
 	random_shuffle(this->machines->begin(), this->machines->end(), myrandom);
 	random_shuffle(this->tasks->begin(), this->tasks->end(), myrandom);
 
+	if(bestSeed)
+		sort(this->tasks->begin(), this->tasks->end(), []( task *x, task *y){ return (x->get_time() > y->get_time());});
 }
-
 
 machine* schedule::chooseMachine(task *Task){
 	int minDeltaTime = 1000000;

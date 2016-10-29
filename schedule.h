@@ -60,7 +60,7 @@ public:
 	std::vector<machine *> * machines;
 	std::vector<task *> * tasks;
 
-	schedule(std::vector<machine *> * machines, std::vector<task *> * tasks);
+	schedule(std::vector<machine *> * machines, std::vector<task *> * tasks, bool bestSeed);
 
 	/*Choose approriate machine for a task */
 	machine* chooseMachine(task *Task);
