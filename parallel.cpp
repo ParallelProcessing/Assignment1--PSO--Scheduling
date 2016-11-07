@@ -100,7 +100,7 @@ int main(int argc, char **argv){
 	vector<schedule *> schedules;
 	//cout <<"size: "<<size <<endl;
 
-	//time_t begin = time_ms();
+	
 	for (int i = 0 ; i < (int)STEP / size; i++){
 		schedule *scheduleObj;
 		if (i % (32 / size) == 0)
@@ -113,7 +113,6 @@ int main(int argc, char **argv){
 	}
 
 	//cout <<"time schedule: "<< time_ms()- begin <<endl;
-
 	schedule *minSchedule = minOfVector(schedules);
 
 	MPI_Gather(& minSchedule->timeFinish, 1, MPI_INT, result, 1, MPI_INT, 0, MPI_COMM_WORLD );
@@ -134,14 +133,15 @@ int main(int argc, char **argv){
 		/*Send message for requriring the best process draw*/
 		bestProcess = indexBestProcess;
 	}
-
+	
+	
 	/* Send bestprocess to all process*/
 	MPI_Bcast(&bestProcess, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
 	if(rank == bestProcess){
 
 		cout <<"Now, visualize the progress by drawing:......... "<<endl;
-	//	minSchedule->draw();
+//		minSchedule->draw();
 		cout <<"Process "<< rank <<" releases the best result time: "<< minSchedule->timeFinish <<endl;
 	}
 
