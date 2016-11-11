@@ -8,7 +8,7 @@
 #include <sstream>
 #include <string>
 #include <sys/time.h>
-#define STEP 20
+#define STEP 1000
 
 using namespace std;
 
@@ -97,12 +97,11 @@ int main(int argc, char **argv){
 
 	/* Each process do scheduling*/
 	vector<schedule *> schedules;
-	//cout <<"size: "<<size <<endl;
-
 	
+	time_t begin = time_ms();
 	for (int i = 0 ; i < (int)STEP / size; i++){
 		schedule *scheduleObj;
-		if (i % 10 == 0)
+		if (i % 5 == 0)
 			 scheduleObj = new schedule(machines, tasks, true); //bestSeed
 		else 
 			scheduleObj = new schedule(machines, tasks, false); //randomSeed
@@ -111,7 +110,6 @@ int main(int argc, char **argv){
 		schedules.push_back(scheduleObj);
 	}
 
-	//cout <<"time schedule: "<< time_ms()- begin <<endl;
 	schedule *minSchedule = minOfVector(schedules);
 
 	MPI_Gather(& minSchedule->timeFinish, 1, MPI_INT, result, 1, MPI_INT, 0, MPI_COMM_WORLD );
@@ -138,10 +136,13 @@ int main(int argc, char **argv){
 	MPI_Bcast(&bestProcess, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
 	if(rank == bestProcess){
-
-		cout <<"Now, visualize the progress by drawing:......... "<<endl;
-//		minSchedule->draw();
 		cout <<"Process "<< rank <<" releases the best result time: "<< minSchedule->timeFinish <<endl;
+		cout <<"time schedule: "<< time_ms()- begin <<"(ms)"<<endl;
+		cout <<"Do you want to simulate the progress ? (yes/no)" <<endl;
+		string choice = "";
+		cin >>choice ;
+		if (choice == "yes")
+			minSchedule->draw();
 	}
 
 

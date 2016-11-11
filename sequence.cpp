@@ -81,10 +81,11 @@ int main(int argc, char **argv){
 
 	/*Init scheduleObj with generated machines and tasks above*/
 	vector<schedule *> schedules;
-	//time_t begin = time_ms();
+
+	time_t begin = time_ms();
 	for (int i = 0 ; i < (int)STEP ; i++){
 		schedule * scheduleObj;
-		if (i % 2 == 0 )
+		if (i % 5 == 0 )
 			scheduleObj = new schedule(machines, tasks, true); // bestSeed
 		else
 			scheduleObj = new schedule(machines, tasks, false); //randomSeed
@@ -92,14 +93,17 @@ int main(int argc, char **argv){
 		scheduleObj->scheduling();
 		schedules.push_back(scheduleObj);
 	}
-	//cout <<"time shedule: "<< time_ms() - begin <<endl;
 
 	schedule *minSchedule = minOfVector(schedules);
 
-	cout <<"Now, visualize the progress by drawing.........."<<endl;
+	cout <<"The best result :  "<< minSchedule->timeFinish << endl;	
+	cout <<"Time shedule: "<< time_ms() - begin <<"ms"<<endl;
+	cout << "Do you want to simulate the progress ? (yes/no)" <<endl;
+	
+	string choice = "";
+	cin >> choice;
+	cout <<endl;
+	if (choice == "yes")
+		minSchedule->draw();
 
-	/* Draw the best result*/
-//	minSchedule->draw();
-
-	cout <<"The best result time:  "<< minSchedule->timeFinish << endl;	
 }
