@@ -7,7 +7,7 @@
 #include <sstream>
 #include <string>
 #include <sys/time.h>
-#define STEP 500
+#define STEP 1000
 using namespace std;
 
 time_t time_ms(void) {
@@ -84,7 +84,7 @@ int main(int argc, char **argv){
 	//time_t begin = time_ms();
 	for (int i = 0 ; i < (int)STEP ; i++){
 		schedule * scheduleObj;
-		if (i % 32 == 0 )
+		if (i % 2 == 0 )
 			scheduleObj = new schedule(machines, tasks, true); // bestSeed
 		else
 			scheduleObj = new schedule(machines, tasks, false); //randomSeed

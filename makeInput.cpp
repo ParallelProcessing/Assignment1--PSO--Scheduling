@@ -6,7 +6,7 @@
 
 #define MACHINE "machine"
 #define TASK "task"
-#define MAX_TIME 32
+#define MAX_TIME 8
 
 int CPU[] = {4, 8, 10, 12, 14, 16};
 int RAM[] = {4, 8, 10, 12, 14, 16};

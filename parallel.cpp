@@ -8,15 +8,14 @@
 #include <sstream>
 #include <string>
 #include <sys/time.h>
+#define STEP 20
 
-#define STEP 500
 using namespace std;
 
 time_t time_ms(void) {
         timeval tp;
         gettimeofday(&tp, NULL);
-        return (time_t)tp.tv_sec * 1000 + (time_t)tp.tv_usec / 1000;
-	
+        return (time_t)tp.tv_sec * 1000 + (time_t)tp.tv_usec / 1000;	
 }
 
 vector<string> split(const string &s, char delim) {
@@ -103,7 +102,7 @@ int main(int argc, char **argv){
 	
 	for (int i = 0 ; i < (int)STEP / size; i++){
 		schedule *scheduleObj;
-		if (i % (32 / size) == 0)
+		if (i % 10 == 0)
 			 scheduleObj = new schedule(machines, tasks, true); //bestSeed
 		else 
 			scheduleObj = new schedule(machines, tasks, false); //randomSeed
